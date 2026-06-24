@@ -1,3 +1,4 @@
+import { supabase } from "@/config/supabase";
 import { createContext, useState } from "react";
 
 interface AutoProviderProps {
@@ -19,7 +20,22 @@ export default function AuthProvider({ children }: AutoProviderProps) {
 
   async function signIn(email: string, password: string) {}
 
-  async function signUp(name: string, email: string, password: string) {}
+  async function signUp(name: string, email: string, password: string) {
+    const { error } = await supabase.auth.signUp({
+      email: email,
+      password: password,
+      options: {
+        data: {
+          name: name,
+        },
+      },
+    });
+
+    if (error) {
+      alert("erro");
+      return;
+    }
+  }
 
   return (
     <AuthContext value={{ signed, loading, signIn, signUp }}>

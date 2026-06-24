@@ -2,9 +2,11 @@ import Button from "@/components/Button";
 import Input from "@/components/Input";
 import { colors } from "@/constants/theme";
 import { AuthContext } from "@/contexts/AuthContext";
+import useSignUp from "@/hooks/useAuth";
 import { router } from "expo-router";
 import { ArrowLeftCircle } from "lucide-react-native";
 import React, { useContext, useState } from "react";
+import { Controller } from "react-hook-form";
 import {
   KeyboardAvoidingView,
   Platform,
@@ -16,6 +18,8 @@ import {
 } from "react-native";
 
 export default function SignUp() {
+  const { control, errors, handleSubmit, isSubmitting, onSubmit } = useSignUp();
+
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -24,7 +28,12 @@ export default function SignUp() {
   const { signUp } = useContext(AuthContext);
 
   async function handleSignUp(name: string, email: string, password: string) {
-    await signUp(name, email, password);
+    if (!name || !email || !password) {
+      alert("existem campos vazios");
+      return;
+    }
+
+    await signUp(name, email, password).then(() => alert("deu certo"));
   }
 
   return (
@@ -53,32 +62,68 @@ export default function SignUp() {
             Vamos criar sua conta.
           </Text>
 
-          <View className="flex-col gap-6 mt-[20%]">
-            <Input
-              iconName="User"
-              placeholder="informe seu nome"
-              value={name}
-              onChangeText={(text) => setName(text)}
+          <View className="flex-col mt-[20%]" style={{ gap: 16 }}>
+            <Controller
+              control={control}
+              name="name"
+              render={({ field: { value, onChange } }) => (
+                <Input
+                  iconName="User"
+                  placeholder="informe seu nome"
+                  value={value}
+                  onChangeText={onChange}
+                />
+              )}
             />
 
-            <Input
-              iconName="Mail"
-              placeholder="informe seu e-mail"
-              value={email}
-              onChangeText={(text) => setEmail(text)}
-              keyboardType="email-address"
+            {errors.name && (
+              <Text className="text-left text-red-500 mt-1 mb-4">
+                {errors.name?.message}
+              </Text>
+            )}
+
+            <Controller
+              control={control}
+              name="email"
+              render={({ field: { value, onChange } }) => (
+                <Input
+                  iconName="Mail"
+                  placeholder="informe seu e-mail"
+                  value={value}
+                  onChangeText={onChange}
+                  keyboardType="email-address"
+                />
+              )}
             />
 
-            <Input
-              iconName="Lock"
-              placeholder="informe sua senha"
-              toggleVisibleContent
-              value={password}
-              onChangeText={(text) => setPassword(text)}
+            {errors.email && (
+              <Text className="text-left text-red-500 mt-1 mb-4">
+                {errors.email?.message}
+              </Text>
+            )}
+
+            <Controller
+              control={control}
+              name="password"
+              render={({ field: { value, onChange } }) => (
+                <Input
+                  iconName="Lock"
+                  placeholder="informe sua senha"
+                  toggleVisibleContent
+                  value={value}
+                  onChangeText={onChange}
+                />
+              )}
             />
+
+            {errors.password && (
+              <Text className="text-left text-red-500 mt-1 mb-4">
+                {errors.password?.message}
+              </Text>
+            )}
 
             <Button
-              onPress={() => handleSignUp(name, email, password)}
+              onPress={handleSubmit(onSubmit)}
               title="Criar"
               variant="primary"
               activeOpacity={0.75}
