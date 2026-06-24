@@ -6,7 +6,7 @@ import {
   FieldValues,
   Path,
 } from "react-hook-form";
-import { Text } from "react-native";
+import { Text, View } from "react-native";
 import Input from "./Input";
 
 import * as Icons from "lucide-react-native";
@@ -29,7 +29,7 @@ export default function ControllerComponent<T extends FieldValues>({
   ...inputProps
 }: ControlledInputProps<T>) {
   return (
-    <>
+    <View className="mb-4">
       <Controller
         control={control}
         name={name}
@@ -43,10 +43,10 @@ export default function ControllerComponent<T extends FieldValues>({
         )}
       />
       {errors[name] && (
-        <Text className="text-left text-red-500 mt-1 mb-4">
+        <Text className="text-left text-red-500 mt-1">
           {errors[name]?.message as string}
         </Text>
       )}
-    </>
+    </View>
   );
 }
