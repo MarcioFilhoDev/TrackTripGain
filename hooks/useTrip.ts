@@ -46,6 +46,8 @@ export type NewTripFormData = z.infer<typeof newTripSchema>;
 const useNewTrip = () => {
   const { userData } = useContext(AuthContext);
 
+  const defaultDate = new Date();
+
   const {
     control,
     handleSubmit,
@@ -56,7 +58,7 @@ const useNewTrip = () => {
     resolver: zodResolver(newTripSchema),
     defaultValues: {
       customer: "",
-      date: new Date(),
+      date: defaultDate,
       fuel: false,
       totalKm: undefined,
       totalTon: undefined,
@@ -112,6 +114,7 @@ const useNewTrip = () => {
     errors,
     watch,
     reset,
+    defaultDate,
   };
 };
 

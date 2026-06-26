@@ -3,7 +3,8 @@ import ControllerComponent from "@/components/Controller";
 import SwitchFuel from "@/components/SwitchFuel";
 import { colors } from "@/constants/theme";
 import useNewTrip from "@/hooks/useTrip";
-import React from "react";
+import { useFocusEffect } from "expo-router";
+import React, { useCallback, useState } from "react";
 import { Controller } from "react-hook-form";
 import {
   ActivityIndicator,
@@ -14,10 +15,19 @@ import {
   Text,
   View,
 } from "react-native";
+import { Calendar } from "react-native-calendars";
 
 export default function Home() {
-  const { control, errors, handleSubmit, isSubmitting, onSubmit, watch } =
-    useNewTrip();
+  const {
+    control,
+    errors,
+    handleSubmit,
+    isSubmitting,
+    onSubmit,
+    watch,
+    defaultDate,
+    reset,
+  } = useNewTrip();
 
   const totalKm = watch("totalKm") ?? 0;
   const totalTon = watch("totalTon") ?? 0;
@@ -30,10 +40,20 @@ export default function Home() {
   //  se tem "valueFuel" utiliza-se seu valor, se não, utiliza "0"
   const valorLiquido = fuel ? valorBruto - (valueFuel ?? 0) : valorBruto;
 
+  const [showCalendar, setShowCalendar] = useState(false);
+
+  useFocusEffect(
+    useCallback(() => {
+      reset();
+
+      return () => {};
+    }, []),
+  );
+
   return (
     <KeyboardAvoidingView
       style={styles.container}
-      behavior={Platform.OS === "ios" ? "padding" : undefined}
+      behavior={Platform.OS === "ios" ? "padding" : "height"}
     >
       <ScrollView
         contentContainerStyle={styles.scrollContainer}
@@ -47,14 +67,44 @@ export default function Home() {
           label="Cliente"
         />
 
-        {/* Abrir calendario e selecionar dia da viagem */}
-        <Button
-          activeOpacity={0.85}
-          label="Data"
-          title={new Date().toLocaleDateString("pt-BR")}
-          className="bg-white flex-row items-center px-4 gap-2 rounded elevation h-12 mb-4"
-          styleText={{ color: "#999", fontWeight: "normal" }}
-          iconName="Calendar"
+        <Controller
+          control={control}
+          name="date"
+          render={({ field: { value, onChange } }) => (
+            <View>
+              <Button
+                onPress={() => setShowCalendar((prev) => !prev)}
+                activeOpacity={0.85}
+                label="Data"
+                title={value.toLocaleDateString("pt-BR")}
+                className="bg-white flex-row items-center px-4 gap-2 rounded elevation h-12 mb-4"
+                styleText={{
+                  color:
+                    value.getDate() == defaultDate.getDate()
+                      ? "#999"
+                      : colors.text,
+                  fontWeight: "normal",
+                }}
+                iconName="Calendar"
+              />
+
+              {showCalendar && (
+                <Calendar
+                  style={{ borderRadius: 20 }}
+                  current={value.toISOString().split("T")[0]}
+                  onDayPress={(day) => {
+                    onChange(new Date(day.dateString));
+                    setShowCalendar(false);
+                  }}
+                  markedDates={{
+                    [value.toISOString().split("T")[0]]: {
+                      selected: true,
+                    },
+                  }}
+                />
+              )}
+            </View>
+          )}
         />
 
         <View className="flex-row gap-8">
@@ -146,8 +196,8 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   scrollContainer: {
-    paddingTop: "10%",
-    flexGrow: 1,
+    flex: 1,
     paddingHorizontal: "10%",
+    paddingTop: 50,
   },
 });
