@@ -1,7 +1,7 @@
 import Button from "@/components/Button";
 import ControllerComponent from "@/components/Controller";
 import { colors } from "@/constants/theme";
-import useSignUp from "@/hooks/useAuth";
+import useSignUp from "@/hooks/useSignUp";
 import { router } from "expo-router";
 import { ArrowLeftCircle } from "lucide-react-native";
 import React from "react";

@@ -50,7 +50,25 @@ export default function AuthProvider({ children }: AutoProviderProps) {
     return () => subscription.unsubscribe();
   }, []);
 
-  async function signIn(email: string, password: string) {}
+  async function signIn(email: string, password: string) {
+    await supabase.auth
+      .signInWithPassword({
+        email: email,
+        password: password,
+      })
+      .then(async (data) => {
+        let userData = {
+          user_id: data.data.user?.id as string,
+          email: email,
+          name: data.data.user?.user_metadata.name,
+        };
+
+        setUserData(userData);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }
 
   async function signUp(name: string, email: string, password: string) {
     const { error } = await supabase.auth.signUp({

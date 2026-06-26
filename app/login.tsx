@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import {
   KeyboardAvoidingView,
   Platform,
@@ -12,18 +12,14 @@ import { Link } from "expo-router";
 
 //  Components
 import Button from "@/components/Button";
-import Input from "@/components/Input";
 
 //  Constants
+import ControllerComponent from "@/components/Controller";
 import { colors } from "@/constants/theme";
+import useSignIn from "@/hooks/useSignIn";
 
 export default function Login() {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-
-  function handleLogin() {
-    console.log({ email, password });
-  }
+  const { control, errors, handleSubmit, isSubmitting, onSubmit } = useSignIn();
 
   return (
     <KeyboardAvoidingView
@@ -43,25 +39,26 @@ export default function Login() {
             Acesse sua conta.
           </Text>
 
-          <View className="flex-col gap-6 mt-[20%]">
-            <Input
-              iconName="Mail"
+          <View className="flex-col mt-[20%]">
+            <ControllerComponent
+              control={control}
+              name="email"
               placeholder="digite seu e-mail"
-              value={email}
-              onChangeText={(text) => setEmail(text)}
-              keyboardType="email-address"
+              errors={errors}
+              iconName="Mail"
             />
 
-            <Input
+            <ControllerComponent
+              control={control}
+              name="password"
+              placeholder="digite sua senha"
+              errors={errors}
               iconName="Lock"
-              placeholder="*********"
               toggleVisibleContent
-              value={password}
-              onChangeText={(text) => setPassword(text)}
             />
 
             <Button
-              onPress={handleLogin}
+              onPress={handleSubmit(onSubmit)}
               title="Acessar"
               variant="primary"
               activeOpacity={0.75}
