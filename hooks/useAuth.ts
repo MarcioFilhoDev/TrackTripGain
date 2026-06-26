@@ -6,7 +6,6 @@ import { z } from "zod";
 
 import { AuthContext } from "@/contexts/AuthContext";
 
-//  1 - create and export schemas
 const signUpSchema = z.object({
   name: z.string().min(2, "Nome muito pequeno.").max(50, "Nome muito grande."),
   email: z
@@ -18,8 +17,9 @@ const signUpSchema = z.object({
 
 export type SignUpFormData = z.infer<typeof signUpSchema>;
 
-//  2 - create hooks
 const useSignUp = () => {
+  const { signUp } = useContext(AuthContext);
+
   //  1 - declare useForm and define your resolver
   const {
     control,
@@ -29,8 +29,6 @@ const useSignUp = () => {
     resolver: zodResolver(signUpSchema),
     defaultValues: { name: "", email: "", password: "" },
   });
-
-  const { signUp } = useContext(AuthContext);
 
   //  3 - create function of current hook
   const onSubmit = async (data: SignUpFormData) => {
@@ -51,5 +49,4 @@ const useSignUp = () => {
   };
 };
 
-//  4 - export hooks
 export default useSignUp;

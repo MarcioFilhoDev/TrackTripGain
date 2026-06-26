@@ -20,7 +20,6 @@ import { colors } from "@/constants/theme";
 export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [loading, setLoading] = useState(false);
 
   function handleLogin() {
     console.log({ email, password });

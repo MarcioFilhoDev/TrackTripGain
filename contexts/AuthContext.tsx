@@ -16,6 +16,7 @@ interface AuthContextData {
   signed: boolean;
   signIn: (email: string, password: string) => Promise<void>;
   signUp: (name: string, email: string, password: string) => Promise<void>;
+  signOut(): Promise<void>;
   userData: userDataProps | null;
 }
 
@@ -23,21 +24,21 @@ export const AuthContext = createContext({} as AuthContextData);
 
 export default function AuthProvider({ children }: AutoProviderProps) {
   const [signed, setSigned] = useState(false);
-  const [userData, setUser] = useState<userDataProps | null>(null);
+  const [userData, setUserData] = useState<userDataProps | null>(null);
 
   useEffect(() => {
     const {
       data: { subscription },
     } = supabase.auth.onAuthStateChange((_event, session) => {
       if (session) {
-        setUser({
+        setUserData({
           user_id: session.user.id,
           name: session.user.user_metadata?.name ?? "",
           email: session.user.email ?? "",
         });
         setSigned(true);
       } else {
-        setUser(null);
+        setUserData(null);
         setSigned(false);
       }
 
@@ -69,8 +70,20 @@ export default function AuthProvider({ children }: AutoProviderProps) {
     }
   }
 
+  async function signOut() {
+    const { error } = await supabase.auth.signOut();
+
+    if (error) {
+      console.log(error);
+      return;
+    }
+
+    router.replace("/login");
+    setUserData(null);
+  }
+
   return (
-    <AuthContext value={{ signed, signIn, signUp, userData }}>
+    <AuthContext value={{ signed, signIn, signUp, userData, signOut }}>
       {children}
     </AuthContext>
   );
