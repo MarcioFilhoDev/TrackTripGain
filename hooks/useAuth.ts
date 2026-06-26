@@ -1,9 +1,10 @@
 import { useForm } from "react-hook-form";
 
-import { AuthContext } from "@/contexts/AuthContext";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useContext } from "react";
 import { z } from "zod";
+
+import { AuthContext } from "@/contexts/AuthContext";
 
 //  1 - create and export schemas
 const signUpSchema = z.object({

@@ -7,15 +7,16 @@ export default function PainelRoutes() {
     <Tabs
       initialRouteName="home"
       screenOptions={{
+        tabBarHideOnKeyboard: true,
         headerShown: false,
         tabBarLabelVisibilityMode: "unlabeled",
         tabBarStyle: {
-          position: "absolute",
+          overflow: "hidden",
           marginHorizontal: "5%",
           backgroundColor: colors.primary,
           borderTopWidth: 0,
           borderRadius: 4,
-          marginBottom: "2%",
+          marginBottom: "5%",
         },
         tabBarActiveBackgroundColor: "#fff",
         tabBarActiveTintColor: colors.primary,

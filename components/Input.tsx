@@ -23,26 +23,28 @@ export default function Input({
   const Icon = iconName ? (Icons[iconName] as LucideIcon) : null;
 
   return (
-    <View className="bg-white flex-row items-center px-4 gap-2 rounded elevation h-12">
-      {label && <Text>Input</Text>}
+    <View>
+      {label && <Text className="text-lg font-medium">{label}</Text>}
 
-      {Icon && <Icon size={24} color={colors.text} />}
-      <TextInput
-        className="flex-1 placeholder:text-placeholder text-[16px]"
-        //  se ao chamar eu passo "toggleVisibleContent", verifico o status de "visiblePass"
-        secureTextEntry={toggleVisibleContent ? !visiblePass : false}
-        {...rest}
-      />
+      <View className="bg-white flex-row items-center px-4 gap-2 rounded elevation h-12">
+        {Icon && <Icon size={24} color={colors.text} />}
+        <TextInput
+          className="flex-1 placeholder:text-placeholder text-[16px]"
+          //  se ao chamar eu passo "toggleVisibleContent", verifico o status de "visiblePass"
+          secureTextEntry={toggleVisibleContent ? !visiblePass : false}
+          {...rest}
+        />
 
-      {toggleVisibleContent && (
-        <Pressable onPress={() => setVisiblePass(!visiblePass)}>
-          {visiblePass ? (
-            <Icons.Eye size={24} color={colors.placeholder} />
-          ) : (
-            <Icons.EyeOff size={24} color={colors.placeholder} />
-          )}
-        </Pressable>
-      )}
+        {toggleVisibleContent && (
+          <Pressable onPress={() => setVisiblePass(!visiblePass)}>
+            {visiblePass ? (
+              <Icons.Eye size={24} color={colors.placeholder} />
+            ) : (
+              <Icons.EyeOff size={24} color={colors.placeholder} />
+            )}
+          </Pressable>
+        )}
+      </View>
     </View>
   );
 }

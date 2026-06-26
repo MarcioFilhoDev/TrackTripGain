@@ -10,6 +10,7 @@ module.exports = {
         text: "#121212",
         placeholder: "#999",
         primary: "#064E3B",
+        secondary: "#90d1c0",
       },
     },
   },
