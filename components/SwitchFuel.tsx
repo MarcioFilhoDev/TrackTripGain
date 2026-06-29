@@ -10,7 +10,7 @@ interface SwitchFuelProps {
 
 export default function SwitchFuel({ selected, onChange }: SwitchFuelProps) {
   return (
-    <View className="flex-row gap-8 mb-4">
+    <View className="flex-row h-12 gap-8 mb-4">
       <Button
         title="Empresa"
         style={{

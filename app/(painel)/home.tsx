@@ -144,12 +144,11 @@ export default function Home() {
         <Controller
           control={control}
           name="fuel"
-          defaultValue={false}
+          defaultValue={true}
           render={({ field: { value, onChange } }) => (
-            <>
+            <View>
               <SwitchFuel selected={value} onChange={onChange} />
-
-              {value && (
+              {value ? (
                 <ControllerComponent
                   control={control}
                   name="valueFuel"
@@ -159,8 +158,10 @@ export default function Home() {
                   keyboardType="numeric"
                   formatValue={(text) => Number(text)}
                 />
+              ) : (
+                ""
               )}
-            </>
+            </View>
           )}
         />
 
