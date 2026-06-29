@@ -42,6 +42,7 @@ export default function Home() {
 
   const [showCalendar, setShowCalendar] = useState(false);
 
+  //  reset fields after joined and out of screen
   useFocusEffect(
     useCallback(() => {
       reset();
@@ -116,7 +117,7 @@ export default function Home() {
             placeholder="0"
             style={{ flex: 1 }}
             keyboardType="numeric"
-            formatValue={(text) => Number(text)}
+            formatValue={(text) => Number(text.replace(",", "."))}
           />
 
           <ControllerComponent
@@ -127,7 +128,7 @@ export default function Home() {
             placeholder="0"
             style={{ flex: 1 }}
             keyboardType="numeric"
-            formatValue={(text) => Number(text)}
+            formatValue={(text) => Number(text.replace(",", "."))}
           />
         </View>
 
@@ -156,7 +157,7 @@ export default function Home() {
                   label="Valos gasto no abastecimento (R$)"
                   placeholder="0,00"
                   keyboardType="numeric"
-                  formatValue={(text) => Number(text)}
+                  formatValue={(text) => Number(text.replace(",", "."))}
                 />
               ) : (
                 ""

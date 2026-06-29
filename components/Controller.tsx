@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useRef, useState } from "react";
 import {
   Control,
   Controller,
@@ -15,16 +15,12 @@ interface ControlledInputProps<T extends FieldValues> {
   control: Control<T>;
   errors: FieldErrors<T>;
   name: Path<T>;
-
   iconName?: keyof typeof Icons;
-
   label?: string;
   placeholder: string;
-
   keyboardType?: "default" | "email-address" | "numeric" | "phone-pad";
   toggleVisibleContent?: boolean;
   style?: StyleProp<ViewStyle>;
-
   formatValue?: (value: string) => any;
 }
 
@@ -44,13 +40,12 @@ export default function ControllerComponent<T extends FieldValues>({
         control={control}
         name={name}
         render={({ field: { value, onChange } }) => (
-          <Input
+          <ControlledText
             label={label}
             iconName={iconName}
-            value={value === undefined || value === null ? "" : String(value)}
-            onChangeText={(text) =>
-              onChange(formatValue ? formatValue(text) : text)
-            }
+            value={value}
+            onChange={onChange}
+            formatValue={formatValue}
             {...inputProps}
           />
         )}
@@ -62,4 +57,27 @@ export default function ControllerComponent<T extends FieldValues>({
       )}
     </View>
   );
+}
+
+function ControlledText({ value, onChange, formatValue, ...inputProps }: any) {
+  const [text, setText] = useState(
+    value === undefined || value === null ? "" : String(value),
+  );
+  const lastEmitted = useRef(value);
+
+  useEffect(() => {
+    if (value !== lastEmitted.current) {
+      setText(value === undefined || value === null ? "" : String(value));
+      lastEmitted.current = value;
+    }
+  }, [value]);
+
+  const handleChangeText = (rawText: string) => {
+    setText(rawText);
+    const parsed = formatValue ? formatValue(rawText) : rawText;
+    lastEmitted.current = parsed;
+    onChange(parsed);
+  };
+
+  return <Input {...inputProps} value={text} onChangeText={handleChangeText} />;
 }
