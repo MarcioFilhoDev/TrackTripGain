@@ -1,10 +1,14 @@
 import React from "react";
-import { Text, View } from "react-native";
+import { View } from "react-native";
+
+import { sampleData } from "@/types/data";
 
 export default function Dashboard() {
+  const chartData = sampleData["1M"];
+
   return (
-    <View>
-      <Text>dashboard screen</Text>
+    <View className="flex-1 bg-background justify-center">
+      {/* <Chart data={chartData} /> */}
     </View>
   );
 }

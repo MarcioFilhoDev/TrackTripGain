@@ -11,12 +11,8 @@ export default function PainelRoutes() {
         headerShown: false,
         tabBarLabelVisibilityMode: "unlabeled",
         tabBarStyle: {
-          overflow: "hidden",
-          marginHorizontal: "5%",
           backgroundColor: colors.primary,
           borderTopWidth: 0,
-          borderRadius: 4,
-          marginBottom: "5%",
         },
         tabBarActiveBackgroundColor: "#fff",
         tabBarActiveTintColor: colors.primary,

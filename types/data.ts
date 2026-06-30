@@ -1,0 +1,35 @@
+export const sampleData = {
+  "1M": [
+    { value: 5200, label: "Semana 1" },
+    { value: 5500, label: "Semana 2" },
+    { value: 5800, label: "Semana 3" },
+    { value: 6100, label: "Semana 4" },
+  ],
+  "3M": [
+    { value: 3655, label: "Mês 1" },
+    { value: 4200, label: "Mês 2" },
+    { value: 4700, label: "Mês 3" },
+  ],
+  "6M": [
+    { value: 1280, label: "Mês 1" },
+    { value: 2150, label: "Mês 2" },
+    { value: 2850, label: "Mês 3" },
+    { value: 3400, label: "Mês 4" },
+    { value: 3900, label: "Mês 5" },
+    { value: 4550, label: "Mês 6" },
+  ],
+  "12M": [
+    { value: 4320, label: "Jan" },
+    { value: 4900, label: "Fev" },
+    { value: 5200, label: "Mar" },
+    { value: 5800, label: "Abr" },
+    { value: 6300, label: "Mai" },
+    { value: 6900, label: "Jun" },
+    { value: 7300, label: "Jul" },
+    { value: 7800, label: "Ago" },
+    { value: 8200, label: "Set" },
+    { value: 8600, label: "Out" },
+    { value: 9050, label: "Nov" },
+    { value: 9500, label: "Dez" },
+  ],
+};
