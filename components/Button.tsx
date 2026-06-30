@@ -14,7 +14,7 @@ import * as Icons from "lucide-react-native";
 import { LucideIcon } from "lucide-react-native";
 
 interface ButtonProps extends TouchableOpacityProps {
-  title: string | any;
+  title?: string | any;
   variant?: "primary" | "secondary";
   loading?: boolean;
   label?: string;

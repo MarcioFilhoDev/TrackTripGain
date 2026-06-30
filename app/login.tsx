@@ -60,6 +60,7 @@ export default function Login() {
             <Button
               onPress={handleSubmit(onSubmit)}
               title="Acessar"
+              loading={isSubmitting}
               variant="primary"
               activeOpacity={0.75}
             />
