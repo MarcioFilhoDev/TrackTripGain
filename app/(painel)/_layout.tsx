@@ -10,7 +10,7 @@ import { View } from "react-native";
 
 export default function PainelRoutes() {
   return (
-    <View className="flex-1 pt-10">
+    <View className="flex-1">
       <Tabs
         initialRouteName="home"
         screenOptions={{

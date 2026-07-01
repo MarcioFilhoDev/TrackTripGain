@@ -28,7 +28,7 @@ export default function Profile() {
   );
 
   return (
-    <View className="flex-1 bg-background px-6 pt-16 pb-8 justify-between">
+    <View className="flex-1 bg-background px-6 pt-[50] pb-8 justify-between">
       <View className="items-center">
         <Image
           source={require("../../assets/images/account.png")}
@@ -52,7 +52,9 @@ export default function Profile() {
                 className="mt-4"
               />
             ) : (
-              <Text className="text-primary text-xl font-bold">{count}</Text>
+              <Text className="text-primary text-xl font-bold">
+                {count ?? "0"}
+              </Text>
             )}
           </View>
 
