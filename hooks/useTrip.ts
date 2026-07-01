@@ -67,17 +67,6 @@ const useNewTrip = () => {
     },
   });
 
-  const newCustomer = async (customer: string) => {
-    try {
-      await supabase.from("customers").insert({
-        user_id: userData?.user_id,
-        customer_name: customer,
-      });
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
   const onSubmit = async (tripData: NewTripFormData) => {
     try {
       if (tripData.fuel === false) tripData.valueFuel = 0;
@@ -110,9 +99,6 @@ const useNewTrip = () => {
         console.log(error);
         return;
       }
-
-      //  inserindo "customer" na tabela "customers"
-      newCustomer(tripData.customer);
 
       reset();
     } catch (error) {
