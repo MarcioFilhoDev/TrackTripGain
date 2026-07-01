@@ -10,6 +10,7 @@ export default function TripItem({
   tripDate,
   totalKm,
   totalTon,
+  id,
 }: tripProps) {
   const formattedGain = gain.toFixed(2).replace(".", ",");
   const formattedDate = new Date(tripDate).toLocaleDateString("pt-BR");
@@ -30,7 +31,6 @@ export default function TripItem({
         R$ {formattedGain}
       </Text>
 
-      {/* Footer: resumo da viagem */}
       <View className="flex-row justify-between pt-3 border-t border-gray-100">
         <View className="flex-row items-center gap-2">
           <View className="bg-gray-50 p-2 rounded-full">

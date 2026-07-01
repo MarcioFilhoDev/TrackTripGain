@@ -8,17 +8,20 @@ export type tripProps = {
   tripDate: string;
   totalKm: string;
   totalTon: string;
+  id: string;
 };
 
 const useGetTrips = () => {
   const { userData } = useContext(AuthContext);
   const [tripList, setTripList] = useState<tripProps[]>([]);
+  const [loading, setLoading] = useState(false);
 
   const loadTrips = async () => {
+    setLoading(true);
     try {
       const { data } = await supabase
         .from("trips")
-        .select("customer, gain, tripDate, totalKm, totalTon")
+        .select("id, customer, gain, tripDate, totalKm, totalTon")
         .eq("user_id", userData?.user_id);
 
       if (data) {
@@ -27,9 +30,12 @@ const useGetTrips = () => {
     } catch (error) {
       console.log(error);
     }
+
+    setLoading(false);
   };
 
   return {
+    loading,
     loadTrips,
     tripList,
   };
