@@ -82,7 +82,8 @@ export default function Home() {
                 className="bg-white flex-row items-center px-4 gap-2 rounded elevation h-12 mb-4"
                 styleText={{
                   color:
-                    value.getDate() == defaultDate.getDate()
+                    value.toLocaleDateString("pt-BR") ==
+                    new Date().toLocaleDateString("pt-BR")
                       ? "#999"
                       : colors.text,
                   fontWeight: "normal",
@@ -98,6 +99,7 @@ export default function Home() {
                     onChange(new Date(day.dateString));
                     setShowCalendar(false);
                   }}
+                  maxDate={new Date().toDateString()}
                   markedDates={{
                     [value.toISOString().split("T")[0]]: {
                       selected: true,
