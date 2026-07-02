@@ -45,6 +45,7 @@ export default function Home() {
   //  reset fields after joined and out of screen
   useFocusEffect(
     useCallback(() => {
+      setShowCalendar(false);
       reset();
 
       return () => {};
