@@ -1,5 +1,6 @@
 import TripItem from "@/components/TripItem";
 import { colors } from "@/constants/theme";
+import useDeleteTrip from "@/hooks/useDeleteTrip";
 import useGetTrips from "@/hooks/useGetTrips";
 import { useFocusEffect } from "expo-router";
 import { PlusCircle, Search, X } from "lucide-react-native";
@@ -16,6 +17,7 @@ import {
 
 export default function Trips() {
   const { loadTrips, tripList, loading } = useGetTrips();
+  const { deleteTrip } = useDeleteTrip();
   const [limit, setLimit] = useState(0);
 
   const [search, setSearch] = useState("");
@@ -36,6 +38,11 @@ export default function Trips() {
       return () => {};
     }, []),
   );
+
+  async function handleDeleteTrip(id: string) {
+    await deleteTrip(id);
+    await loadTrips();
+  }
 
   return (
     <View className="flex-1 px-[10%] pb-[5%] bg-background pt-[50]">
@@ -69,7 +76,9 @@ export default function Trips() {
           showsVerticalScrollIndicator={false}
           data={filterTrips.slice(0, limit)}
           keyExtractor={(item) => item.id}
-          renderItem={({ item }) => <TripItem {...item} />}
+          renderItem={({ item }) => (
+            <TripItem {...item} deleteTrip={handleDeleteTrip} />
+          )}
           ListEmptyComponent={() =>
             search.length > 0 || filterTrips.length < 0 ? (
               <Text>Ops, nenhum registro foi encontrado.</Text>
