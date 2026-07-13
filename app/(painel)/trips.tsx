@@ -3,7 +3,7 @@ import { colors } from "@/constants/theme";
 import useDeleteTrip from "@/hooks/useDeleteTrip";
 import useGetTrips from "@/hooks/useGetTrips";
 import { useFocusEffect } from "expo-router";
-import { PlusCircle, Search, X } from "lucide-react-native";
+import { Calendar, PlusCircle, Search, X } from "lucide-react-native";
 import React, { useCallback, useState } from "react";
 import {
   ActivityIndicator,
@@ -18,8 +18,8 @@ import {
 export default function Trips() {
   const { loadTrips, tripList, loading } = useGetTrips();
   const { deleteTrip } = useDeleteTrip();
-  const [limit, setLimit] = useState(0);
 
+  const [limit, setLimit] = useState(0);
   const [search, setSearch] = useState("");
   const filterTrips =
     search.length > 0
@@ -50,21 +50,27 @@ export default function Trips() {
         Confira suas viagens realizadas
       </Text>
 
-      <View className="flex-row items-center gap-2 mt-4 mb-2 bg-white px-4 rounded-lg elevation">
-        <Search size={20} color={colors.placeholder} />
-        <TextInput
-          value={search}
-          onChangeText={(text) => setSearch(text)}
-          placeholder="digite algo"
-          placeholderTextColor={colors.placeholder}
-          className="flex-1"
-        />
+      <View className="flex-row items-center mt-4 gap-2">
+        <View className="flex-1 flex-row items-center gap-2 bg-white px-4 rounded-lg elevation">
+          <Search size={20} color={colors.placeholder} />
+          <TextInput
+            value={search}
+            onChangeText={(text) => setSearch(text)}
+            placeholder="digite algo"
+            placeholderTextColor={colors.placeholder}
+            className="flex-1"
+          />
 
-        {search.length > 0 && (
-          <Pressable onPress={() => setSearch("")}>
-            <X size={20} color={colors.placeholder} />
-          </Pressable>
-        )}
+          {search.length > 0 && (
+            <Pressable onPress={() => setSearch("")}>
+              <X size={20} color={colors.placeholder} />
+            </Pressable>
+          )}
+        </View>
+
+        <TouchableOpacity className="bg-primary p-3 rounded-lg">
+          <Calendar size={20} color={"#fff"} strokeWidth={3} />
+        </TouchableOpacity>
       </View>
 
       {loading ? (

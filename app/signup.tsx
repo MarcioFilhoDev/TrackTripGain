@@ -21,7 +21,7 @@ export default function SignUp() {
   return (
     <KeyboardAvoidingView
       style={styles.container}
-      behavior={Platform.OS === "ios" ? "padding" : undefined}
+      behavior={Platform.OS === "ios" ? "padding" : "padding"}
     >
       <ScrollView
         contentContainerStyle={styles.scrollContainer}
