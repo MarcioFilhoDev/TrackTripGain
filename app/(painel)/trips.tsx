@@ -1,13 +1,9 @@
-import TripItem from "@/components/TripItem";
-import { colors } from "@/constants/theme";
-import useDeleteTrip from "@/hooks/useDeleteTrip";
-import useGetTrips from "@/hooks/useGetTrips";
 import { useFocusEffect } from "expo-router";
-import { Calendar, PlusCircle, Search, X } from "lucide-react-native";
 import React, { useCallback, useState } from "react";
 import {
   ActivityIndicator,
   FlatList,
+  Modal,
   Pressable,
   Text,
   TextInput,
@@ -15,12 +11,29 @@ import {
   View,
 } from "react-native";
 
+import TripItem from "@/components/TripItem";
+import { colors } from "@/constants/theme";
+
+import useDeleteTrip from "@/hooks/useDeleteTrip";
+import useGetTrips from "@/hooks/useGetTrips";
+
+import SelectPeriodo from "@/components/SelectPeriodo";
+import {
+  Calendar as CalendarIcon,
+  Frown,
+  PlusCircle,
+  Search,
+  SearchX,
+  X,
+} from "lucide-react-native";
+
 export default function Trips() {
-  const { loadTrips, tripList, loading } = useGetTrips();
+  const { loadTrips, filteredTrips, tripList, loading } = useGetTrips();
   const { deleteTrip } = useDeleteTrip();
 
   const [limit, setLimit] = useState(0);
   const [search, setSearch] = useState("");
+  const [visibleFilteredCalendar, setVisibleFilteredCalendar] = useState(false);
   const filterTrips =
     search.length > 0
       ? tripList.filter((trip) => trip.customer.includes(search))
@@ -44,13 +57,17 @@ export default function Trips() {
     await loadTrips();
   }
 
+  async function handleFilter(startDate: string, endDate: string) {
+    await filteredTrips({ startDate: startDate, endDate: endDate });
+  }
+
   return (
     <View className="flex-1 px-[10%] pb-[5%] bg-background pt-[50]">
       <Text className="text-text text-[26px] font-medium">
         Confira suas viagens realizadas
       </Text>
 
-      <View className="flex-row items-center mt-4 gap-2">
+      <View className="flex-row items-center mt-4 mb-4 gap-2">
         <View className="flex-1 flex-row items-center gap-2 bg-white px-4 rounded-lg elevation">
           <Search size={20} color={colors.placeholder} />
           <TextInput
@@ -68,9 +85,30 @@ export default function Trips() {
           )}
         </View>
 
-        <TouchableOpacity className="bg-primary p-3 rounded-lg">
-          <Calendar size={20} color={"#fff"} strokeWidth={3} />
+        <TouchableOpacity
+          onPress={() => setVisibleFilteredCalendar(true)}
+          className="bg-primary p-3 rounded-lg"
+        >
+          <CalendarIcon size={20} color={"#fff"} strokeWidth={3} />
         </TouchableOpacity>
+      </View>
+
+      {visibleFilteredCalendar && (
+        <Modal
+          animationType="slide"
+          transparent
+          visible={visibleFilteredCalendar}
+        >
+          <SelectPeriodo
+            filter={handleFilter}
+            closeModal={() => setVisibleFilteredCalendar(false)}
+          />
+        </Modal>
+      )}
+
+      <View>
+        <Text>total ganho no período: R$ </Text>
+        <Text>total de óleo abastecido no período:</Text>
       </View>
 
       {loading ? (
@@ -87,9 +125,19 @@ export default function Trips() {
           )}
           ListEmptyComponent={() =>
             search.length > 0 || filterTrips.length < 0 ? (
-              <Text>Ops, nenhum registro foi encontrado.</Text>
+              <View className="flex-row h-full items-center justify-center mt-6 gap-2">
+                <SearchX size={22} color={"#121212"} />
+                <Text className="text-[#121212] font-semibold">
+                  Nenhum registro foi encontrado!
+                </Text>
+              </View>
             ) : (
-              <Text>Você ainda não registrou nenhuma viagem</Text>
+              <View className="flex-row h-full items-center justify-center mt-6 gap-2">
+                <Frown size={22} color={"#121212"} />
+                <Text className="text-[#121212] font-semibold">
+                  Você ainda não registrou nenhuma viagem.
+                </Text>
+              </View>
             )
           }
           ListFooterComponent={

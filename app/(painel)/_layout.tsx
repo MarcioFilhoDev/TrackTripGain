@@ -1,11 +1,6 @@
 import { colors } from "@/constants/theme";
 import { Tabs } from "expo-router";
-import {
-  ChartNoAxesCombinedIcon,
-  Home,
-  Scroll,
-  User2Icon,
-} from "lucide-react-native";
+import { Home, Scroll, User2Icon } from "lucide-react-native";
 import { View } from "react-native";
 
 export default function PainelRoutes() {
@@ -29,16 +24,6 @@ export default function PainelRoutes() {
           },
         }}
       >
-        <Tabs.Screen
-          name="dashboard"
-          options={{
-            href: null,
-            tabBarIcon: ({ color, size }) => (
-              <ChartNoAxesCombinedIcon size={size} color={color} />
-            ),
-          }}
-        />
-
         <Tabs.Screen
           name="trips"
           options={{

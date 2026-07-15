@@ -14,11 +14,47 @@ export type tripProps = {
   valuePerKm: number;
 };
 
+interface FilterTripProps {
+  startDate: string;
+  endDate?: string;
+}
+
 const useGetTrips = () => {
   const { userData } = useContext(AuthContext);
 
   const [tripList, setTripList] = useState<tripProps[]>([]);
   const [loading, setLoading] = useState(false);
+
+  const filteredTrips = async ({ startDate, endDate }: FilterTripProps) => {
+    try {
+      if (endDate) {
+        const { data } = await supabase
+          .from("trips")
+          .select("*")
+          .eq("user_id", userData?.user_id)
+          .gte("tripDate", startDate)
+          .lte("tripDate", endDate);
+
+        if (data) {
+          setTripList(data);
+          return;
+        }
+      } else {
+        const { data } = await supabase
+          .from("trips")
+          .select("*")
+          .eq("user_id", userData?.user_id)
+          .gte("tripDate", startDate);
+
+        if (data) {
+          setTripList(data);
+          return;
+        }
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
   const loadTrips = async () => {
     setLoading(true);
@@ -44,6 +80,8 @@ const useGetTrips = () => {
     loading,
     loadTrips,
     tripList,
+    setTripList,
+    filteredTrips,
   };
 };
 
