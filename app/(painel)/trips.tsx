@@ -20,15 +20,17 @@ import useGetTrips from "@/hooks/useGetTrips";
 import SelectPeriodo from "@/components/SelectPeriodo";
 import {
   Calendar as CalendarIcon,
-  Frown,
+  Fuel,
   PlusCircle,
   Search,
   SearchX,
+  Wallet,
   X,
 } from "lucide-react-native";
 
 export default function Trips() {
-  const { loadTrips, filteredTrips, tripList, loading } = useGetTrips();
+  const { loadTrips, filteredTrips, totalGain, totalOleo, tripList, loading } =
+    useGetTrips();
   const { deleteTrip } = useDeleteTrip();
 
   const [limit, setLimit] = useState(0);
@@ -106,9 +108,30 @@ export default function Trips() {
         </Modal>
       )}
 
-      <View>
-        <Text>total ganho no período: R$ </Text>
-        <Text>total de óleo abastecido no período:</Text>
+      <View className="flex-row gap-3">
+        <View className="flex-1 bg-white rounded-lg p-3 elevation">
+          <View className="flex-row items-center gap-2 mb-1">
+            <Wallet size={16} color={colors.primary} />
+            <Text className="text-placeholder text-xs font-medium">
+              Ganho do período
+            </Text>
+          </View>
+          <Text className="text-text text-lg font-bold">
+            R$ {totalGain?.toFixed(2).replace(".", ",") ?? "0,00"}
+          </Text>
+        </View>
+
+        <View className="flex-1 bg-white rounded-lg p-3 elevation">
+          <View className="flex-row items-center gap-2 mb-1">
+            <Fuel size={16} color={colors.primary} />
+            <Text className="text-placeholder text-xs font-medium">
+              Óleo diesel
+            </Text>
+          </View>
+          <Text className="text-text text-lg font-bold">
+            {totalOleo?.toFixed(2).replace(".", ",") ?? "0,00"} L
+          </Text>
+        </View>
       </View>
 
       {loading ? (
@@ -133,9 +156,8 @@ export default function Trips() {
               </View>
             ) : (
               <View className="flex-row h-full items-center justify-center mt-6 gap-2">
-                <Frown size={22} color={"#121212"} />
                 <Text className="text-[#121212] font-semibold">
-                  Você ainda não registrou nenhuma viagem.
+                  Você ainda não realizou uma viagem.
                 </Text>
               </View>
             )

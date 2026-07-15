@@ -23,7 +23,17 @@ const useGetTrips = () => {
   const { userData } = useContext(AuthContext);
 
   const [tripList, setTripList] = useState<tripProps[]>([]);
+  const [totalGain, setTotalGain] = useState<number | null>(null);
+  const [totalOleo, setTotalOleo] = useState<number | null>(null);
   const [loading, setLoading] = useState(false);
+
+  function calculateTotalGain(data: tripProps[]) {
+    const ganhosTotal = data.reduce((acc, trip) => acc + trip.gain, 0);
+    const oleoTotal = data.reduce((acc, trip) => acc + trip.valueFuel, 0);
+
+    setTotalGain(ganhosTotal ?? 0);
+    setTotalOleo(oleoTotal ?? 0);
+  }
 
   const filteredTrips = async ({ startDate, endDate }: FilterTripProps) => {
     try {
@@ -37,6 +47,7 @@ const useGetTrips = () => {
 
         if (data) {
           setTripList(data);
+          calculateTotalGain(data);
           return;
         }
       } else {
@@ -48,6 +59,7 @@ const useGetTrips = () => {
 
         if (data) {
           setTripList(data);
+          calculateTotalGain(data);
           return;
         }
       }
@@ -68,6 +80,7 @@ const useGetTrips = () => {
 
       if (data) {
         setTripList(data);
+        calculateTotalGain(data);
       }
     } catch (error) {
       console.log(error);
@@ -78,8 +91,10 @@ const useGetTrips = () => {
 
   return {
     loading,
-    loadTrips,
     tripList,
+    totalGain,
+    totalOleo,
+    loadTrips,
     setTripList,
     filteredTrips,
   };
