@@ -38,7 +38,7 @@ export default function TripItem({
     <TouchableOpacity
       onLongPress={() => setVisibleModalDelete(true)}
       activeOpacity={0.7}
-      className="bg-white rounded-2xl p-4 shadow-sm border border-gray-100 mt-4"
+      className="bg-white rounded-2xl p-4 shadow-sm border border-gray-100 mb-4"
     >
       <View>
         <View className="flex-row justify-between items-center mb-4">

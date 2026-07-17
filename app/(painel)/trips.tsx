@@ -22,6 +22,7 @@ import {
   Calendar as CalendarIcon,
   Fuel,
   PlusCircle,
+  RotateCcw,
   Search,
   SearchX,
   Wallet,
@@ -29,17 +30,24 @@ import {
 } from "lucide-react-native";
 
 export default function Trips() {
-  const { loadTrips, filteredTrips, totalGain, totalOleo, tripList, loading } =
-    useGetTrips();
+  const {
+    loadTrips,
+    filteredPeriodTrips,
+    filteredCustomerTrips,
+    tripList,
+    loading,
+    filtered,
+  } = useGetTrips();
   const { deleteTrip } = useDeleteTrip();
 
   const [limit, setLimit] = useState(0);
   const [search, setSearch] = useState("");
   const [visibleFilteredCalendar, setVisibleFilteredCalendar] = useState(false);
+
   const filterTrips =
-    search.length > 0
-      ? tripList.filter((trip) => trip.customer.includes(search))
-      : tripList;
+    search.length > 0 ? filteredCustomerTrips(search) : tripList;
+  const totalGain = filterTrips.reduce((acc, trip) => acc + trip.gain, 0);
+  const totalOleo = filterTrips.reduce((acc, trip) => acc + trip.valueFuel, 0);
 
   useFocusEffect(
     useCallback(() => {
@@ -60,16 +68,20 @@ export default function Trips() {
   }
 
   async function handleFilter(startDate: string, endDate: string) {
-    await filteredTrips({ startDate: startDate, endDate: endDate });
+    await filteredPeriodTrips({ startDate: startDate, endDate: endDate });
   }
+
+  console.log(filtered);
 
   return (
     <View className="flex-1 px-[10%] pb-[5%] bg-background pt-[50]">
       <Text className="text-text text-[26px] font-medium">
-        Confira suas viagens realizadas
+        Confira suas viagens
       </Text>
 
+      {/* Filtros */}
       <View className="flex-row items-center mt-4 mb-4 gap-2">
+        {/* Filtro por cliente */}
         <View className="flex-1 flex-row items-center gap-2 bg-white px-4 rounded-lg elevation">
           <Search size={20} color={colors.placeholder} />
           <TextInput
@@ -81,17 +93,34 @@ export default function Trips() {
           />
 
           {search.length > 0 && (
-            <Pressable onPress={() => setSearch("")}>
-              <X size={20} color={colors.placeholder} />
-            </Pressable>
+            <View>
+              <Pressable onPress={() => setSearch("")}>
+                <X size={20} color={colors.placeholder} />
+              </Pressable>
+            </View>
           )}
         </View>
 
+        {/* Filtro por periodo */}
         <TouchableOpacity
           onPress={() => setVisibleFilteredCalendar(true)}
           className="bg-primary p-3 rounded-lg"
         >
-          <CalendarIcon size={20} color={"#fff"} strokeWidth={3} />
+          <View>
+            <CalendarIcon size={20} color={"#fff"} strokeWidth={3} />
+
+            {filtered && (
+              <View className="absolute -top-4 -right-4 w-4 h-4 rounded-full bg-[red]" />
+            )}
+          </View>
+        </TouchableOpacity>
+
+        <TouchableOpacity
+          disabled={!filtered}
+          onPress={async () => await loadTrips()}
+          className={`p-2.5 rounded-lg ${!filtered ? "bg-[#c4c4c4]" : "bg-white"}`}
+        >
+          <RotateCcw color={"#575757"} />
         </TouchableOpacity>
       </View>
 
@@ -108,7 +137,7 @@ export default function Trips() {
         </Modal>
       )}
 
-      <View className="flex-row gap-3">
+      <View className="flex-row gap-3 mb-4">
         <View className="flex-1 bg-white rounded-lg p-3 elevation">
           <View className="flex-row items-center gap-2 mb-1">
             <Wallet size={16} color={colors.primary} />

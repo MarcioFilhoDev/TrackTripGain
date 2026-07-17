@@ -23,20 +23,28 @@ const useGetTrips = () => {
   const { userData } = useContext(AuthContext);
 
   const [tripList, setTripList] = useState<tripProps[]>([]);
-  const [totalGain, setTotalGain] = useState<number | null>(null);
-  const [totalOleo, setTotalOleo] = useState<number | null>(null);
-  const [loading, setLoading] = useState(false);
+  const [filtered, setFiltered] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(false);
 
-  function calculateTotalGain(data: tripProps[]) {
-    const ganhosTotal = data.reduce((acc, trip) => acc + trip.gain, 0);
-    const oleoTotal = data.reduce((acc, trip) => acc + trip.valueFuel, 0);
+  //  Função para filtrar por clientes
+  const filteredCustomerTrips = (input: string): tripProps[] => {
+    const newTripList = tripList.filter((trip) =>
+      trip.customer.includes(input),
+    );
 
-    setTotalGain(ganhosTotal ?? 0);
-    setTotalOleo(oleoTotal ?? 0);
-  }
+    //  chamar a função para atualizar o ganho e o óleo diesel
+    console.log(newTripList);
 
-  const filteredTrips = async ({ startDate, endDate }: FilterTripProps) => {
+    return newTripList;
+  };
+
+  // Função para filtrar por periodo
+  const filteredPeriodTrips = async ({
+    startDate,
+    endDate,
+  }: FilterTripProps) => {
     try {
+      setFiltered(true);
       if (endDate) {
         const { data } = await supabase
           .from("trips")
@@ -47,7 +55,6 @@ const useGetTrips = () => {
 
         if (data) {
           setTripList(data);
-          calculateTotalGain(data);
           return;
         }
       } else {
@@ -59,15 +66,16 @@ const useGetTrips = () => {
 
         if (data) {
           setTripList(data);
-          calculateTotalGain(data);
           return;
         }
       }
     } catch (error) {
+      setFiltered(false);
       console.error(error);
     }
   };
 
+  //  Função que busca as viagens ao carregar
   const loadTrips = async () => {
     setLoading(true);
     try {
@@ -80,23 +88,24 @@ const useGetTrips = () => {
 
       if (data) {
         setTripList(data);
-        calculateTotalGain(data);
+        setFiltered(false);
       }
     } catch (error) {
       console.log(error);
     }
 
     setLoading(false);
+    setFiltered(false);
   };
 
   return {
     loading,
     tripList,
-    totalGain,
-    totalOleo,
+    filtered,
     loadTrips,
     setTripList,
-    filteredTrips,
+    filteredPeriodTrips,
+    filteredCustomerTrips,
   };
 };
 
